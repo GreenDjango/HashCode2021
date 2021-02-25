@@ -21,7 +21,8 @@
     "lint:fix": "npm run lint -- --fix"
   },
   "dependencies": {
-    "commander": "^7.1.0"
+    "commander": "^7.1.0",
+    "ora": "^5.3.0"
   },
   "devDependencies": {
     "@types/node": "^14.14.22",
