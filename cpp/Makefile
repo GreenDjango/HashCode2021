@@ -1,51 +1,46 @@
 
 ##
-## EPITECH PROJECT, 2018
-## Makefile V2, by fred
+## EPITECH PROJECT, 2021
+## Makefile, by fred
 ## File description:
-## perso_libcpp
+## decide which parts need to be recompiled
 ##
 
-#--------   [Flag gcc]   --------#
-cc	=	g++
+#========  [Config]  ========#
+dirs	=	.
+src	=	$(foreach dir,$(dirs),$(wildcard ./$(dir)/*.$(type)))
+obj	=	$(patsubst %.$(type), $(folder)/%.o,$(notdir $(src)))
+dep	=	$(patsubst %.$(type), $(folder)/%.d,$(notdir $(src)))
+
 type	=	cpp
-header	=	.
+cc	=	g++
+folder	=	build
+exe	=	hashcode.out
 cflags	=	-Wall -Wextra -I $(header) -g
+header	=	.
 extra	=
 
-#--------      [Vars]     --------#
-exe	=	hashcode.out
-obj_dir	=	build
-modules	=	.
-src	=	$(foreach module,$(modules),$(wildcard ./$(module)/*.$(type)))
-obj	=	$(patsubst %.$(type), $(obj_dir)/%.o,$(notdir $(src)))
-dep	=	$(patsubst %.$(type), $(obj_dir)/%.d,$(notdir $(src)))
+#========  [Colors]  ========#
+define printcolor
+	printf "\033[1;3%dm%s\033[0m\n" $1 $2
+endef
 
-#--------     Colors    --------#
-def	=	\033[0m
-red	=	\033[1;31m
-green	=	\033[1;32m
-blue	=	\033[1;34m
-white	=	\033[1;37m
-yellow	=	\033[1;33m
-
-#------- Generate project ------#
-all: $(obj_dir) $(exe)
+#========  [Create]  ========#
+all: $(folder) $(exe)
 
 $(exe): $(obj)
-	@printf "    └─   $(green)./$@$(def)\n"
+	@printf "    └─   " ; $(call printcolor,2,"./$@")
 	$(cc) -o $@ $(obj)
 
-$(obj_dir):
-	@printf "$(green)[%s]\n$(def)" build
-	@printf "    ├─% 3s"
+$(folder):
+	@$(call printcolor,2,"[build]") ; printf "    ├─% 3s"
 	mkdir -p $@
 
 define get_obj
-$(patsubst %.$(type), $(obj_dir)/%.o,$(notdir $1)): $1
-	@printf "$(yellow)├[compiling]$(def) - $(white)$$<$(def)...\r"
+$(patsubst %.$(type), $(folder)/%.o,$(notdir $1)): $1
+	@printf "    ├─% 3s\033[1;33m[compiling]\033[0m - \033[1;37m$$<\033[0m...\r"
 	@$(cc) $(cflags) -MMD -MP -c -o $$@ $$< $(extra)
-	@printf "    ├─% 3s$(green)[ok]$(def) - $(white)$$<$(def)...% 10s\n"
+	@printf "    ├─% 3s\033[1;32m[ok]\033[0m - \033[1;37m$$<\033[0m...% 10s\n"
 endef
 
 -include $(dep)
@@ -54,15 +49,11 @@ $(foreach source,$(src), $(eval $(call get_obj,$(source))))
 
 #------  Clean and build  ------#
 clean:
-	@printf "$(red)[%s]\n$(def)" clean
-	@printf "    ├─% 3srm(obj)\n"
-	@rm -f $(obj)
+	@$(call printcolor,1,"[clean]") ; printf "    ├─% 3s"
+	rm -rf $(folder)
 
 fclean: clean
-	@printf "    ├─% 3s"
-	rm -f $(exe)
 	@printf "    └─% 3s"
-	rm -rf $(obj_dir)
-	@printf "\n"
+	rm -f $(exe)
 
 re: fclean all
