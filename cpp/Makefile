@@ -19,6 +19,7 @@ obj_dir	=	build
 modules	=	.
 src	=	$(foreach module,$(modules),$(wildcard ./$(module)/*.$(type)))
 obj	=	$(patsubst %.$(type), $(obj_dir)/%.o,$(notdir $(src)))
+dep	=	$(patsubst %.$(type), $(obj_dir)/%.d,$(notdir $(src)))
 
 #--------     Colors    --------#
 def	=	\033[0m
@@ -43,9 +44,11 @@ $(obj_dir):
 define get_obj
 $(patsubst %.$(type), $(obj_dir)/%.o,$(notdir $1)): $1
 	@printf "$(yellow)├[compiling]$(def) - $(white)$$<$(def)...\r"
-	@$(cc) $(cflags) -c -o $$@ $$< $(extra)
+	@$(cc) $(cflags) -MMD -MP -c -o $$@ $$< $(extra)
 	@printf "    ├─% 3s$(green)[ok]$(def) - $(white)$$<$(def)...% 10s\n"
 endef
+
+-include $(dep)
 
 $(foreach source,$(src), $(eval $(call get_obj,$(source))))
 
