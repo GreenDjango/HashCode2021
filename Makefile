@@ -6,9 +6,12 @@
 
 #--------   [Flag]   --------#
 path1	=	./cpp
+path2	=	./node
 
 #------- Generate project ------#
 all:
+	npm run build --prefix node/
+	node $(path2)/dist/index.js -f package.json
 	$(MAKE) -C $(path1)
 
 
@@ -22,6 +25,9 @@ fclean:
 re: fclean all
 
 #------  function  ------#
-.PHONY: all clean re fclean
+archive:
+	git archive -o hashcode2021.zip HEAD
+
+.PHONY: all archive clean re fclean
 
 .SILENT: clean fclean re
