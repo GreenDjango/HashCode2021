@@ -14,7 +14,7 @@ cflags	=	-Wall -Wextra -I $(header) -g
 extra	=
 
 #--------      [Vars]     --------#
-exe	=	hashcode
+exe	=	hashcode.out
 obj_dir	=	build
 modules	=	.
 src	=	$(foreach module,$(modules),$(wildcard ./$(module)/*.$(type)))
