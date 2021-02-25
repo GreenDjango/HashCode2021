@@ -15,3 +15,19 @@ struct array_s
 `
 
 export const END_HADER = `#endif`
+
+class Header {
+    text = ''
+
+    constructor() {
+        this.text = BEGIN_HADER
+    }
+
+    addXXX() {
+        1
+    }
+
+    toString() {
+        return this.text + END_HADER
+    }
+}
